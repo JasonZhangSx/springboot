@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 import java.util.UUID;
 
-@Controller     //等同于同时加上了@Controller和@ResponseBody
+@Controller
+//@RestController//等同于同时加上了@Controller和@ResponseBody
 public class HelloController {
 
     @Autowired
