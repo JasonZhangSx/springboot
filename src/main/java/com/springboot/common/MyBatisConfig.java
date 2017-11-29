@@ -1,9 +1,9 @@
 package com.springboot.common;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ import java.util.Properties;
 //如果加载spring-context.xml文件：
 //ApplicationContext context = new ClassPathXmlApplicationContext("spring-context.xml");
 @Configuration // 该注解类似于spring配置文件
-@MapperScan(basePackages = "com.springboot.mapper")
+//@MapperScan(basePackages = "com.springboot.mapper")
 public class MyBatisConfig {
     @Autowired
     private Environment env;
@@ -85,6 +85,9 @@ public class MyBatisConfig {
      */
     @Bean
     public SqlSessionFactory sqlSessionFactory(DynamicDataSource ds) throws Exception {
+        //解决myBatis下 不能嵌套jar文件的问题
+        VFS.addImplClass(SpringBootVFS.class);
+
         SqlSessionFactoryBean fb = new SqlSessionFactoryBean();
         fb.setDataSource(ds);// 指定数据源(这个必须有，否则报错)
         // 下边两句仅仅用于*.xml文件，如果整个持久层操作不需要使用到xml文件的话（只用注解就可以搞定），则不加
