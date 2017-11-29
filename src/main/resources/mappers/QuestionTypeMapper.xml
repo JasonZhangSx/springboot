@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同，源代码没有去看，猜测应该是通过"这里的namespace.下边方法的id"来定位方法的 -->
+<mapper namespace="com.springboot.mapper.QuestionTypeMapper">
+
+    <!-- 开启基于redis的二级缓存 -->
+    <cache type="com.springboot.common.RedisCache"/>
+
+    <select id="getById" resultType="QuestionType">
+        SELECT * FROM question_types WHERE id = #{id}
+    </select>
+
+    <!-- 若不需要自动返回主键，将useGeneratedKeys="true" keyProperty="id"去掉即可(当然如果不需要自动返回主键，直接用注解即可) -->
+    <insert id="insertWithBackId" parameterType="QuestionType" useGeneratedKeys="true" keyProperty="id" >
+        <![CDATA[
+       INSERT INTO question_types
+       (
+           name
+       )
+       VALUES
+       (
+           #{name, jdbcType=VARCHAR}
+       )
+       ]]>
+    </insert>
+
+    <update id="update" parameterType="QuestionType" flushCache="true">
+        UPDATE question_types SET name = #{name} WHERE id = #{id}
+    </update>
+
+</mapper>
